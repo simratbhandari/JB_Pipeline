@@ -28,22 +28,41 @@ def tweet_search(search_words, tweet_limit):
 
 
 # filtering tweets related to music
-matches = ['music', 'tickets', 'concert', 'Video collaboration']  # the keywords related to music
+matches = set(['music', 'tickets', 'concert', 'video collaboration', 'video', 'song', 'songs', 'dance'])  # the keywords related to music
 tweetdates = []
 tweetUsers = []
 tweetTexts = []
 search_words = ["justinbieber","justin bieber", "#justinbieber", "JustinBieber"]
 
 #loop to go through the various tweets
-for tweet in tweet_search(search_words, 500):
-    if any(x in tweet.text for x in matches):
+tweets = tweet_search(search_words, 500)
+for tweet in tweets:
+    match = False
+    #print(tweet)
+    RT = False
+    words = tweet.text.split()
+    for j in range(len(words)):
+        x = words[j]
+        #print(x)
+        # Retweets should be checked first
+        # checking to see if the first word is 'RT' (edge case)
+        if x == 'RT' and j == 0:
+            RT = True
+            break
+        # the contains for matches runs in constant time
+        if x.lower() in matches:
+            match = True
+            break
+        #if any(x in matches for x in tweet.text):
+        # removes retweet duplicate tweets
+    if match == True and RT == False:
         tweetdates.append(tweet.created_at)
         tweetUsers.append(tweet.user.screen_name)
         tweetTexts.append(tweet.text)
 #creates a dataframe with the following column heads: date, user, tweet
 df = pd.DataFrame(list(zip(tweetdates,tweetUsers,tweetTexts)), columns = ['Date','User','Tweet'])
 
-#drop duplicates
+#drop duplicates: extra check
 df.drop_duplicates()
 
 #check for duplicates in a dataframe

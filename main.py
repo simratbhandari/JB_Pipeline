@@ -38,12 +38,10 @@ search_words = ["justinbieber","justin bieber", "#justinbieber", "JustinBieber"]
 tweets = tweet_search(search_words, 500)
 for tweet in tweets:
     match = False
-    #print(tweet)
     RT = False
     words = tweet.text.split()
     for j in range(len(words)):
         x = words[j]
-        #print(x)
         # Retweets should be checked first
         # checking to see if the first word is 'RT' (edge case)
         if x == 'RT' and j == 0:
@@ -53,7 +51,6 @@ for tweet in tweets:
         if x.lower() in matches:
             match = True
             break
-        #if any(x in matches for x in tweet.text):
         # removes retweet duplicate tweets
     if match == True and RT == False:
         tweetdates.append(tweet.created_at)
